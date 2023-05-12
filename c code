@@ -88,7 +88,7 @@ void timsort(int arr[], int n)
 
 int main()
 {
-    const char* filename = "unsorted_data.txt";
+    const char* filename = "random_numbers.txt";
     FILE* file = fopen(filename, "r");
     if (file == NULL)
     {
