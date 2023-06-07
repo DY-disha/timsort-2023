@@ -1,0 +1,10 @@
+from google.colab import files
+
+# Upload the file
+uploaded = files.upload()
+
+# Save the file
+filename = next(iter(uploaded))
+with open(filename, 'r') as file:
+    # Process the file contents
+    pass
