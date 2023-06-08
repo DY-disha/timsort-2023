@@ -1,6 +1,7 @@
 %%cu
 #include <stdio.h>
 #include <stdlib.h>
+#include <cuda_runtime.h>
 
 #define MIN_MERGE 32
 const int max_size = 1000;
@@ -112,8 +113,26 @@ int main()
     int* d_arr;
     cudaMalloc((void**)&d_arr, max_size * sizeof(int));
     cudaMemcpy(d_arr, arr, max_size * sizeof(int), cudaMemcpyHostToDevice);
+    
+     // Create CUDA events for timing
+    cudaEvent_t start, end;
+    cudaEventCreate(&start);
+    cudaEventCreate(&end);
+
+    // Start recording the time
+    cudaEventRecord(start);
 
     timsort<<<1, 1>>>(d_arr, n);
+     // End recording the time
+    cudaEventRecord(end);
+    cudaEventSynchronize(end);
+
+    // Calculate the elapsed time
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, end);
+
+    // Print the elapsed time
+    printf("Execution time: %.3f ms\n", milliseconds);
 
     cudaMemcpy(arr, d_arr, max_size * sizeof(int), cudaMemcpyDeviceToHost);
     cudaFree(d_arr);
